@@ -17,7 +17,7 @@ class UserService(private val userRepository: UserRepository) {
     }
 
     fun addUser(userId: String, email: String) {
-        if(userRepository.findByIdOrNull(userId)==null) {
+        if (userRepository.findByIdOrNull(userId) == null) {
             userRepository.save(
                 Users(
                     userId = userId,
@@ -26,8 +26,7 @@ class UserService(private val userRepository: UserRepository) {
                     money = 0
                 )
             )
-        }
-        else {
+        } else {
             throw IllegalArgumentException()
         }
     }

@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 class PaymentController(private val paymentService: PaymentService) {
 
-    //내역 가져오기
+    // 내역 가져오기
     @GetMapping("/payment/{userId}")
     fun getUserPayment(@PathVariable userId: String): List<PaymentDetails> {
         return paymentService.payment(userId)

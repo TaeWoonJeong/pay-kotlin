@@ -27,7 +27,7 @@ class UserController(private var userService: UserService) {
         userService.addUser(userRequest.userId, userRequest.email)
     }
 
-    //결제 은행 추가
+    // 결제 은행 추가
     @PostMapping("/user/bank")
     fun addBank(@RequestBody bankRequest: BankRequest) {
         userService.addBank(bankRequest.userId, bankRequest.email, bankRequest.bank)

@@ -18,5 +18,5 @@ class PaymentDetails(
     @CreatedDate
     val sendDate: LocalDateTime, // 송금한 날짜
     var receiveDate: LocalDateTime? = null, // 받은 날짜 TYPE이 SEND인 경우만 사용
-    val bank: BANK? = null //CHARGE인 경우만 사용
+    val bank: BANK? = null // CHARGE인 경우만 사용
 )

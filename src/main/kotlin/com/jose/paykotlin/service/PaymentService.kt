@@ -25,10 +25,10 @@ class PaymentService(
     }
 
     @Transactional
-    fun charge(userId: String, money: Long, bank:BANK, paymentType: PAYMENT_TYPE) {
+    fun charge(userId: String, money: Long, bank: BANK, paymentType: PAYMENT_TYPE) {
         if (paymentType.compareTo(PAYMENT_TYPE.CHARGE) == 0) {
             val user = userRepository.findByIdOrNull(userId) ?: throw IllegalArgumentException()
-            if(user.bank.contains(bank)) {
+            if (user.bank.contains(bank)) {
                 paymentRepository.save(
                     PaymentDetails(
                         paymentId = UUID.randomUUID().toString(),
@@ -41,8 +41,7 @@ class PaymentService(
                 )
                 user.money += money
                 userRepository.save(user)
-            }
-            else {
+            } else {
                 throw IllegalArgumentException("은행 등록 안함")
             }
         } else {
