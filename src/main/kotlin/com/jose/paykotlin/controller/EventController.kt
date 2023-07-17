@@ -21,4 +21,9 @@ class EventController(
     fun createEventTicketNoLock(@PathVariable eventId: Long, @RequestBody userRequest: UserRequest) {
         eventService.createEventTicketNoLock(eventId, userRequest.userId, userRequest.email)
     }
+
+    @PostMapping("/events/spinlock/{eventId}")
+    fun createEventTicketSpinLock(@PathVariable eventId: Long, @RequestBody userRequest: UserRequest) {
+        eventService.createEventTicketSpinLock(eventId, userRequest.userId, userRequest.email)
+    }
 }

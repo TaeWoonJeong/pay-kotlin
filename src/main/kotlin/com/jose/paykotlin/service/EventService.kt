@@ -5,13 +5,15 @@ import com.jose.paykotlin.domain.EventTicket
 import com.jose.paykotlin.logger
 import com.jose.paykotlin.repository.EventRepository
 import com.jose.paykotlin.repository.EventTicketRepository
+import com.jose.paykotlin.repository.RedisLockRepositoryImpl
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
 
 @Service
 class EventService(
     private val eventRepository: EventRepository,
-    private val eventTicketRepository: EventTicketRepository
+    private val eventTicketRepository: EventTicketRepository,
+    private val redisLockRepositoryImpl: RedisLockRepositoryImpl
 ) {
     val log = logger()
 
@@ -33,5 +35,23 @@ class EventService(
         }
         val savedEventTicket = eventTicketRepository.save(EventTicket(event = event, userId = userId, email = email))
         log.info("${savedEventTicket.event} ${savedEventTicket.id}")
+    }
+
+    @Transactional
+    fun createEventTicketSpinLock(eventId:Long, userId:String, email:String) {
+        while(!redisLockRepositoryImpl.lock(eventId)) {
+            Thread.sleep(100)
+        }
+
+        try {
+            val event: Event = eventRepository.findById(eventId).orElseThrow()
+            if (event.isClosed()) {
+                throw RuntimeException("마감 되었습니다.")
+            }
+            val savedEventTicket = eventTicketRepository.save(EventTicket(event = event, userId = userId, email = email))
+            log.info("${savedEventTicket.event} ${savedEventTicket.id}")
+        } finally {
+            redisLockRepositoryImpl.unlock(eventId)
+        }
     }
 }
